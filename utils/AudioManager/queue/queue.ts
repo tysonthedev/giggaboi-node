@@ -1,6 +1,3 @@
-import { Interaction } from 'discord.js';
-import { AudioPlayerStatus } from '@discordjs/voice';
-
 import { GuildAudioPlayer } from '../GuildAudioPlayer/types/GuildAudioPlayerTypes';
 
 import { QueueResponse } from './types/QueueResponse';
