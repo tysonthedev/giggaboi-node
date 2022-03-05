@@ -9,7 +9,7 @@ class Skip implements Command {
 		interactionOrCommand: Interaction | Message
 	) => {
 		if (!interactionOrCommand.isCommand()) return;
-		const playAudioResponse = AudioManager.skip(interactionOrCommand.guildId);
+		const playAudioResponse = await AudioManager.skip(interactionOrCommand.guildId);
 		if (!playAudioResponse.success) interactionOrCommand.reply(playAudioResponse.error ?? 'An Error Occurred');
 		else interactionOrCommand.reply('Skipped Audio');
 	};

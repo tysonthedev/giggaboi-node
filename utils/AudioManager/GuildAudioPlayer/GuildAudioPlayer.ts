@@ -33,11 +33,11 @@ export default class InternalGuildAudioPlayer implements GuildAudioPlayer {
 			this._queue = [];
 		};
 		this.onDestroy = onDestroy;
-		this.destroy = () => {
-			this.connection?.disconnect();
-			this.connection?.destroy();
+		this.destroy = async () => {
+			await this.connection?.disconnect();
+			await this.connection?.destroy();
 			this.clearQueue();
-			this.audioPlayer?.stop();
+			await this.audioPlayer?.stop();
 			delete this.connection;
 			delete this.audioPlayer;
 			delete this._queue;

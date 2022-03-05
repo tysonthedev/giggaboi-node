@@ -24,12 +24,13 @@ client.once('ready', () => {
 
 client.login(NODE_ENV === ENV_TYPES.BETA ? BETA_DISCORD_TOKEN : PRODUCTION_DISCORD_TOKEN);
 
-client.on('messageCreate', (message: Message) => {
+client.on('messageCreate', async (message: Message) => {
 	if (message.author.bot) return;
 	if ((message.content?.length ?? 0) <= (COMMAND_PREFIX?.length ?? 0)) return;
 	CommandHandler(message);
 });
 
-client.on('interactionCreate', (interaction: Interaction) => {
+client.on('interactionCreate', async (interaction: Interaction) => {
+	if (interaction.member.user.bot) return;
 	CommandHandler(interaction);
 });

@@ -4,7 +4,7 @@ import { GuildAudioPlayer } from '../GuildAudioPlayer/types/GuildAudioPlayerType
 
 import UtilResponse from '../../types/UtilResponse';
 
-function skip(guildAudioPlayer: GuildAudioPlayer): UtilResponse {
+async function skip(guildAudioPlayer: GuildAudioPlayer): Promise<UtilResponse> {
 	if (!Boolean(guildAudioPlayer?.audioPlayer))
 		return {
 			success: false,
@@ -13,8 +13,8 @@ function skip(guildAudioPlayer: GuildAudioPlayer): UtilResponse {
 	if (guildAudioPlayer?.getQueueArray()?.length ?? 0 > 0) guildAudioPlayer.clearQueue();
 
 	if (guildAudioPlayer.audioPlayer?.state.status !== AudioPlayerStatus.Idle)
-		if (guildAudioPlayer.audioPlayer?.stop) {
-			guildAudioPlayer.destroy();
+		if (await guildAudioPlayer.audioPlayer?.stop) {
+			await guildAudioPlayer.destroy();
 			return { success: true };
 		} else
 			return {

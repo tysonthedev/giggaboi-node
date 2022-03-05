@@ -1,10 +1,10 @@
 import { Interaction, Message } from 'discord.js';
 import AllCommands from './AllCommands';
 
-function CommandHandler(interactionOrCommand: Interaction | Message): void | boolean {
+async function CommandHandler(interactionOrCommand: Interaction | Message): Promise<void | boolean> {
 	if (!interactionOrCommand.isCommand()) return false;
 	try {
-		AllCommands.find((command) => command.data?.name === interactionOrCommand.commandName)?.execute(
+		await AllCommands.find((command) => command.data?.name === interactionOrCommand.commandName)?.execute(
 			interactionOrCommand
 		);
 	} catch (error) {

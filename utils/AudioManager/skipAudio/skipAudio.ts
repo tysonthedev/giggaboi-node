@@ -2,14 +2,14 @@ import { GuildAudioPlayer } from '../GuildAudioPlayer/types/GuildAudioPlayerType
 
 import UtilResponse from '../../types/UtilResponse';
 
-function skip(guildAudioPlayer: GuildAudioPlayer): UtilResponse {
+async function skip(guildAudioPlayer: GuildAudioPlayer): Promise<UtilResponse> {
 	if (!Boolean(guildAudioPlayer?.audioPlayer))
 		return {
 			success: false,
 			error: 'There is currently no audio player',
 		};
-	if (guildAudioPlayer.audioPlayer?.stop()) {
-		if (guildAudioPlayer.isQueueEmpty()) guildAudioPlayer.destroy();
+	if (await guildAudioPlayer.audioPlayer?.stop()) {
+		if (guildAudioPlayer.isQueueEmpty()) await guildAudioPlayer.destroy();
 		return { success: true };
 	} else
 		return {

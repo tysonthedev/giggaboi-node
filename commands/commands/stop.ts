@@ -9,7 +9,7 @@ class Stop implements Command {
 		interactionOrCommand: Interaction | Message
 	) => {
 		if (!interactionOrCommand.isCommand()) return;
-		const playAudioResponse = AudioManager.stop(interactionOrCommand.guildId);
+		const playAudioResponse = await AudioManager.stop(interactionOrCommand.guildId);
 		if (!playAudioResponse.success) interactionOrCommand.reply(playAudioResponse.error ?? 'An Error Occurred');
 		else interactionOrCommand.reply('Stopped Audio');
 	};

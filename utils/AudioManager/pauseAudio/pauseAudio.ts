@@ -4,7 +4,7 @@ import { GuildAudioPlayer } from '../GuildAudioPlayer/types/GuildAudioPlayerType
 
 import UtilResponse from '../../types/UtilResponse';
 
-function pause(guildAudioPlayer: GuildAudioPlayer): UtilResponse {
+async function pause(guildAudioPlayer: GuildAudioPlayer): Promise<UtilResponse> {
 	if (!Boolean(guildAudioPlayer?.audioPlayer))
 		return {
 			success: false,
@@ -15,7 +15,7 @@ function pause(guildAudioPlayer: GuildAudioPlayer): UtilResponse {
 			success: false,
 			error: 'Audio is already paused',
 		};
-	if (guildAudioPlayer.audioPlayer?.pause()) return { success: true };
+	if (await guildAudioPlayer.audioPlayer?.pause()) return { success: true };
 	else
 		return {
 			success: false,

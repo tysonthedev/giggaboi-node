@@ -9,7 +9,7 @@ class Unpause implements Command {
 		interactionOrCommand: Interaction | Message
 	) => {
 		if (!interactionOrCommand.isCommand()) return;
-		const pauseResponse = AudioManager.unpause(interactionOrCommand.guildId);
+		const pauseResponse = await AudioManager.unpause(interactionOrCommand.guildId);
 		if (!pauseResponse.success) interactionOrCommand.reply(pauseResponse.error ?? 'An Error Occurred');
 		else interactionOrCommand.reply('Audio unpaused');
 	};

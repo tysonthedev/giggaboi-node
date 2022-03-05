@@ -9,7 +9,7 @@ class Pause implements Command {
 		interactionOrCommand: Interaction | Message
 	) => {
 		if (!interactionOrCommand.isCommand()) return;
-		const pauseResponse = AudioManager.pause(interactionOrCommand.guildId);
+		const pauseResponse = await AudioManager.pause(interactionOrCommand.guildId);
 		if (!pauseResponse.success) interactionOrCommand.reply(pauseResponse.error ?? 'An Error Occurred');
 		else interactionOrCommand.reply('Audio paused');
 	};

@@ -15,26 +15,27 @@ import ConnectResponse from '../../connect/types/ConnectResponse';
 import AudioStreamUtil from '../AudioStreamUtil/AudioStreamUtil';
 import connect from '../../connect/connect';
 import { Readable } from 'node:stream';
+import { ApplicationCommandPermissionType } from 'discord-api-types';
 
-function _nextSong(guildAudioPlayer: GuildAudioPlayer) {
+async function _nextSong(guildAudioPlayer: GuildAudioPlayer) {
 	try {
 		const nextAudio = guildAudioPlayer.getNextQueueAudio();
 		if (!Boolean(nextAudio)) return false;
-		const stream: Readable | boolean = AudioStreamUtil.getAudioStream(nextAudio!);
+		const stream: Readable | boolean = await AudioStreamUtil.getAudioStream(nextAudio!);
 		if (!Boolean(stream)) return false;
-		const audioResource = createAudioResource(stream as Readable);
-		guildAudioPlayer?.audioPlayer?.play(audioResource);
+		const audioResource = await createAudioResource(stream as Readable);
+		await guildAudioPlayer?.audioPlayer?.play(audioResource);
 		return true;
 	} catch (e) {
 		return false;
 	}
 }
 
-function play(
+async function play(
 	interaction: Interaction | Message,
 	linkOrSearchTerm: string,
 	guildAudioPlayer: GuildAudioPlayer
-): PlayResponse {
+): Promise<PlayResponse> {
 	if (!ytdl.validateURL(linkOrSearchTerm)) {
 		return {
 			success: false,
@@ -44,35 +45,31 @@ function play(
 	guildAudioPlayer.addAudioToQueue(linkOrSearchTerm);
 	//if they don't exist then we need to make new ones
 	if (!Boolean(guildAudioPlayer?.connection)) {
-		const connectResponse: ConnectResponse = connect(interaction);
+		const connectResponse: ConnectResponse = await connect(interaction);
 		if (!connectResponse.success) return connectResponse;
 		guildAudioPlayer.connection = connectResponse.connection;
 	}
 	if (guildAudioPlayer?.connection?.state?.status === VoiceConnectionStatus.Disconnected)
-		guildAudioPlayer?.connection?.rejoin();
+		await guildAudioPlayer?.connection?.rejoin();
 	if (guildAudioPlayer?.connection?.state?.status === VoiceConnectionStatus.Destroyed) {
-		const connectResponse: ConnectResponse = connect(interaction);
+		const connectResponse: ConnectResponse = await connect(interaction);
 		if (!connectResponse.success) return connectResponse;
 		guildAudioPlayer.connection = connectResponse.connection;
 	}
 	if (!Boolean(guildAudioPlayer?.audioPlayer)) {
-		guildAudioPlayer.audioPlayer = createAudioPlayer();
-		guildAudioPlayer.audioPlayer.on('error', (error) => {
-			console.log('an error occured on the audio player:', error);
-			guildAudioPlayer.audioPlayer?.stop();
-		});
+		guildAudioPlayer.audioPlayer = await createAudioPlayer();
 		guildAudioPlayer.audioPlayer.on(
 			AudioPlayerStatus.Idle,
-			(oldState: AudioPlayerState, newState: AudioPlayerState) => {
-				while (!Boolean(_nextSong(guildAudioPlayer))) {
+			async (oldState: AudioPlayerState, newState: AudioPlayerState) => {
+				while (!Boolean(await _nextSong(guildAudioPlayer))) {
 					if (guildAudioPlayer.isQueueEmpty()) {
-						guildAudioPlayer.destroy();
+						await guildAudioPlayer.destroy();
 						break;
 					}
 				}
 			}
 		);
-		guildAudioPlayer.connection!.subscribe(guildAudioPlayer?.audioPlayer);
+		await guildAudioPlayer.connection!.subscribe(guildAudioPlayer?.audioPlayer);
 	}
 	if (guildAudioPlayer?.audioPlayer?.state.status === AudioPlayerStatus.Playing)
 		return {
@@ -80,9 +77,9 @@ function play(
 			success: true,
 		};
 	//we shouldn't ever need to reference the audioResource because we are able to overwrite it whenever we want
-	while (!Boolean(_nextSong(guildAudioPlayer))) {
+	while (!Boolean(await _nextSong(guildAudioPlayer))) {
 		if (guildAudioPlayer.isQueueEmpty()) {
-			guildAudioPlayer.destroy();
+			await guildAudioPlayer.destroy();
 			return {
 				guildAudioPlayer,
 				success: false,

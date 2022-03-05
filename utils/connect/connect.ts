@@ -3,7 +3,7 @@ import { GuildMember, Interaction, Message } from 'discord.js';
 
 import ConnectResponse from './types/ConnectResponse';
 
-function connect(interaction: Interaction | Message): ConnectResponse {
+async function connect(interaction: Interaction | Message): Promise<ConnectResponse> {
 	const interactionMember = interaction.member as GuildMember;
 	if (!Boolean(interactionMember.voice.channelId))
 		return {
@@ -16,7 +16,7 @@ function connect(interaction: Interaction | Message): ConnectResponse {
 		guildId: interactionMember.guild.id,
 		adapterCreator: interactionMember.guild.voiceAdapterCreator,
 	};
-	const connection = joinVoiceChannel(voiceChannelOptions);
+	const connection = await joinVoiceChannel(voiceChannelOptions);
 	return {
 		connection: connection,
 		success: true,

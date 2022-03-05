@@ -23,10 +23,14 @@ function _findAudioPlayerByGuildId(guildId: string): GuildAudioPlayer | undefine
 	return _guildAudioPlayers.find((guildAudioPlayer) => guildAudioPlayer.guildId === guildId);
 }
 
-function play(interaction: Interaction, linkOrSearchTerm: string, guildId: string): UtilResponse {
+async function play(interaction: Interaction, linkOrSearchTerm: string, guildId: string): Promise<UtilResponse> {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	let newGuildAudioPlayer = new GuildAudioPlayer(guildId, _onGuildAudioPlayerDestroy);
-	const playResponse = playAudio(interaction, linkOrSearchTerm, currentGuildAudioPlayer ?? newGuildAudioPlayer!);
+	const playResponse = await playAudio(
+		interaction,
+		linkOrSearchTerm,
+		currentGuildAudioPlayer ?? newGuildAudioPlayer!
+	);
 	//even if playing the audio failed we still need to see if we need to add a new audio player to our array
 	if (Boolean(playResponse.guildAudioPlayer) && !Boolean(currentGuildAudioPlayer))
 		_guildAudioPlayers.push(playResponse.guildAudioPlayer!);
@@ -34,26 +38,26 @@ function play(interaction: Interaction, linkOrSearchTerm: string, guildId: strin
 	return { success: true };
 }
 
-function pause(guildId: string): UtilResponse {
+async function pause(guildId: string): Promise<UtilResponse> {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	if (!currentGuildAudioPlayer)
 		return {
 			success: false,
 			error: 'No audio player in the server',
 		};
-	const pauseResponse = pauseAudio(currentGuildAudioPlayer);
+	const pauseResponse = await pauseAudio(currentGuildAudioPlayer);
 	if (!Boolean(pauseResponse.success)) return pauseResponse;
 	return { success: true };
 }
 
-function unpause(guildId: string): UtilResponse {
+async function unpause(guildId: string): Promise<UtilResponse> {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	if (!currentGuildAudioPlayer)
 		return {
 			success: false,
 			error: 'No audio player in the server',
 		};
-	const pauseResponse = unpauseAudio(currentGuildAudioPlayer);
+	const pauseResponse = await unpauseAudio(currentGuildAudioPlayer);
 	if (!Boolean(pauseResponse.success)) return pauseResponse;
 	return { success: true };
 }
@@ -68,24 +72,24 @@ function queue(guildId: string): QueueResponse {
 	else return getQueue(currentGuildAudioPlayer);
 }
 
-function skip(guildId: string): UtilResponse {
+async function skip(guildId: string): Promise<UtilResponse> {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	if (!currentGuildAudioPlayer)
 		return {
 			success: false,
 			error: 'No audio player in the server',
 		};
-	else return skipAudio(currentGuildAudioPlayer);
+	else return await skipAudio(currentGuildAudioPlayer);
 }
 
-function stop(guildId: string): UtilResponse {
+async function stop(guildId: string): Promise<UtilResponse> {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	if (!currentGuildAudioPlayer)
 		return {
 			success: false,
 			error: 'No audio player in the server',
 		};
-	else return stopAudio(currentGuildAudioPlayer);
+	else return await stopAudio(currentGuildAudioPlayer);
 }
 
 export default { play, pause, unpause, queue, skip, stop };
