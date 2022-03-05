@@ -13,9 +13,13 @@ class Play implements Command {
 		interactionOrCommand: Interaction | Message
 	) => {
 		if (!interactionOrCommand.isCommand()) return;
-		const linkToVideo = interactionOrCommand.options.getString('link');
-		if (!Boolean(linkToVideo)) return interactionOrCommand.reply('no link in command argument');
-		const playAudioResponse = AudioManager.play(interactionOrCommand, linkToVideo!, interactionOrCommand.guildId);
+		const linkOrSearchTerm = interactionOrCommand.options.getString('link');
+		if (!Boolean(linkOrSearchTerm)) return interactionOrCommand.reply('no link in command argument');
+		const playAudioResponse = AudioManager.play(
+			interactionOrCommand,
+			linkOrSearchTerm!,
+			interactionOrCommand.guildId
+		);
 		if (!playAudioResponse.success) interactionOrCommand.reply(playAudioResponse.error ?? 'An Error Occurred');
 		else interactionOrCommand.reply('Audio started playing!');
 	};

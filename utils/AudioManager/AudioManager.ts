@@ -23,10 +23,10 @@ function _findAudioPlayerByGuildId(guildId: string): GuildAudioPlayer | undefine
 	return _guildAudioPlayers.find((guildAudioPlayer) => guildAudioPlayer.guildId === guildId);
 }
 
-function play(interaction: Interaction, linkOrFileName: string, guildId: string): UtilResponse {
+function play(interaction: Interaction, linkOrSearchTerm: string, guildId: string): UtilResponse {
 	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
 	let newGuildAudioPlayer = new GuildAudioPlayer(guildId, _onGuildAudioPlayerDestroy);
-	const playResponse = playAudio(interaction, linkOrFileName, currentGuildAudioPlayer ?? newGuildAudioPlayer!);
+	const playResponse = playAudio(interaction, linkOrSearchTerm, currentGuildAudioPlayer ?? newGuildAudioPlayer!);
 	//even if playing the audio failed we still need to see if we need to add a new audio player to our array
 	if (Boolean(playResponse.guildAudioPlayer) && !Boolean(currentGuildAudioPlayer))
 		_guildAudioPlayers.push(playResponse.guildAudioPlayer!);

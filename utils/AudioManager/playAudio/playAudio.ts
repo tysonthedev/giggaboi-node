@@ -32,15 +32,16 @@ function _nextSong(guildAudioPlayer: GuildAudioPlayer) {
 
 function play(
 	interaction: Interaction | Message,
-	linkOrFileName: string,
+	linkOrSearchTerm: string,
 	guildAudioPlayer: GuildAudioPlayer
 ): PlayResponse {
-	if (!ytdl.validateURL(linkOrFileName))
+	if (!ytdl.validateURL(linkOrSearchTerm)) {
 		return {
 			success: false,
 			error: 'Invalid URL',
 		};
-	guildAudioPlayer.addAudioToQueue(linkOrFileName);
+	}
+	guildAudioPlayer.addAudioToQueue(linkOrSearchTerm);
 	//if they don't exist then we need to make new ones
 	if (!Boolean(guildAudioPlayer?.connection)) {
 		const connectResponse: ConnectResponse = connect(interaction);

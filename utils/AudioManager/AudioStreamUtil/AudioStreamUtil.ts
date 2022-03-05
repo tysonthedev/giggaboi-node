@@ -18,12 +18,12 @@ function _getYtdlStream(link: string): Readable | boolean {
 	return stream;
 }
 
-function getAudioStream(linkOrFileName: string): Readable | boolean {
+function getAudioStream(linkOrSearchTerm: string): Readable | boolean {
 	let stream: Readable | boolean = false;
 	//retry getting the stream 5 times if it still fails then pass back false
 	for (let i = 0; i < RETRY_COUNT; i++) {
 		if (Boolean(stream)) break;
-		stream = _getYtdlStream(linkOrFileName);
+		stream = _getYtdlStream(linkOrSearchTerm);
 	}
 	return stream;
 }
