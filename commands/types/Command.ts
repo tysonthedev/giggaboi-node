@@ -1,7 +1,7 @@
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types';
-import { ApplicationCommandOptionType, Interaction } from 'discord.js';
+import { Interaction, Message } from 'discord.js';
 
 export default interface Command {
 	data: RESTPostAPIApplicationCommandsJSONBody;
-	execute: (interaction: Interaction) => void;
+	execute: (interactionOrMessage: Interaction | Message) => void;
 }

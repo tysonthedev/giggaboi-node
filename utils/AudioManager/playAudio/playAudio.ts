@@ -1,4 +1,4 @@
-import { Interaction } from 'discord.js';
+import { Interaction, Message } from 'discord.js';
 import {
 	AudioPlayerState,
 	AudioPlayerStatus,
@@ -30,7 +30,11 @@ function _nextSong(guildAudioPlayer: GuildAudioPlayer) {
 	}
 }
 
-function play(interaction: Interaction, linkOrFileName: string, guildAudioPlayer: GuildAudioPlayer): PlayResponse {
+function play(
+	interaction: Interaction | Message,
+	linkOrFileName: string,
+	guildAudioPlayer: GuildAudioPlayer
+): PlayResponse {
 	if (!ytdl.validateURL(linkOrFileName))
 		return {
 			success: false,
