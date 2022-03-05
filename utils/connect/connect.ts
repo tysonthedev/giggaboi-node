@@ -1,9 +1,9 @@
 import { CreateVoiceConnectionOptions, joinVoiceChannel, JoinVoiceChannelOptions } from '@discordjs/voice';
-import { GuildMember, Interaction } from 'discord.js';
+import { GuildMember, Interaction, Message } from 'discord.js';
 
 import ConnectResponse from './types/ConnectResponse';
 
-function connect(interaction: Interaction): ConnectResponse {
+function connect(interaction: Interaction | Message): ConnectResponse {
 	const interactionMember = interaction.member as GuildMember;
 	if (!Boolean(interactionMember.voice.channelId))
 		return {

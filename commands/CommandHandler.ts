@@ -1,12 +1,14 @@
-import { Interaction } from 'discord.js';
+import { Interaction, Message } from 'discord.js';
 import AllCommands from './AllCommands';
 
-function CommandHandler(interaction: Interaction): void | boolean {
-	if (!interaction.isCommand()) return false;
+function CommandHandler(interactionOrCommand: Interaction | Message): void | boolean {
+	if (!interactionOrCommand.isCommand()) return false;
 	try {
-		AllCommands.find((value) => value.data?.name === interaction.commandName)?.execute(interaction);
+		AllCommands.find((command) => command.data?.name === interactionOrCommand.commandName)?.execute(
+			interactionOrCommand
+		);
 	} catch (error) {
-		interaction.reply(`An Error occurred while executing a command:${error}`);
+		interactionOrCommand.reply(`An Error occurred while executing a command:${error}`);
 	}
 }
 export default CommandHandler;

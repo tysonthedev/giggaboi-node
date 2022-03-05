@@ -1,9 +1,10 @@
 const dotenv = require('dotenv');
 dotenv.config();
 import { ENV_TYPES } from './types/EnvironmentTypes';
-const { NODE_ENV, BETA_DISCORD_TOKEN, PRODUCTION_DISCORD_TOKEN } = process.env;
+const { NODE_ENV, BETA_DISCORD_TOKEN, PRODUCTION_DISCORD_TOKEN, COMMAND_PREFIX } = process.env;
 
-import { Client, ClientOptions, Intents, Interaction } from 'discord.js';
+import { Client, ClientOptions, Intents, Interaction, Message } from 'discord.js';
+import './augmentedTypes/discordJS';
 import CommandHandler from './commands/CommandHandler';
 
 const options: ClientOptions = {
@@ -23,8 +24,12 @@ client.once('ready', () => {
 
 client.login(NODE_ENV === ENV_TYPES.BETA ? BETA_DISCORD_TOKEN : PRODUCTION_DISCORD_TOKEN);
 
+client.on('messageCreate', (message: Message) => {
+	if (message.author.bot) return;
+	if ((message.content?.length ?? 0) <= (COMMAND_PREFIX?.length ?? 0)) return;
+	CommandHandler(message);
+});
+
 client.on('interactionCreate', (interaction: Interaction) => {
-	if (interaction.isCommand()) {
-		CommandHandler(interaction);
-	}
+	CommandHandler(interaction);
 });
