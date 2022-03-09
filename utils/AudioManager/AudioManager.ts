@@ -24,16 +24,13 @@ function _findAudioPlayerByGuildId(guildId: string): GuildAudioPlayer | undefine
 }
 
 async function play(interaction: Interaction, linkOrSearchTerm: string, guildId: string): Promise<UtilResponse> {
-	const currentGuildAudioPlayer: GuildAudioPlayer | undefined = _findAudioPlayerByGuildId(guildId);
-	let newGuildAudioPlayer = new GuildAudioPlayer(guildId, _onGuildAudioPlayerDestroy);
-	const playResponse = await playAudio(
-		interaction,
-		linkOrSearchTerm,
-		currentGuildAudioPlayer ?? newGuildAudioPlayer!
-	);
+	if (!Boolean(_findAudioPlayerByGuildId(guildId))) {
+		const newGuildAudioPlayer = new GuildAudioPlayer(guildId, _onGuildAudioPlayerDestroy);
+		_guildAudioPlayers.push(newGuildAudioPlayer);
+	}
+	const currentGuildAudioPlayer: GuildAudioPlayer = _findAudioPlayerByGuildId(guildId)!;
+	const playResponse = await playAudio(interaction, linkOrSearchTerm, currentGuildAudioPlayer!);
 	//even if playing the audio failed we still need to see if we need to add a new audio player to our array
-	if (Boolean(playResponse.guildAudioPlayer) && !Boolean(currentGuildAudioPlayer))
-		_guildAudioPlayers.push(playResponse.guildAudioPlayer!);
 	if (!Boolean(playResponse.success)) return playResponse;
 	return { success: true };
 }

@@ -41,7 +41,7 @@ export default class InternalGuildAudioPlayer implements GuildAudioPlayer {
 			delete this.connection;
 			delete this.audioPlayer;
 			delete this._queue;
-			this.onDestroy(this.guildId);
+			this.onDestroy(guildId);
 		};
 	}
 }

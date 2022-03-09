@@ -3,8 +3,8 @@ import { GuildMember, Interaction, Message } from 'discord.js';
 
 import ConnectResponse from './types/ConnectResponse';
 
-async function connect(interaction: Interaction | Message): Promise<ConnectResponse> {
-	const interactionMember = interaction.member as GuildMember;
+async function connect(interactionOrMessage: Interaction | Message): Promise<ConnectResponse> {
+	const interactionMember = interactionOrMessage.member as GuildMember;
 	if (!Boolean(interactionMember.voice.channelId))
 		return {
 			success: false,

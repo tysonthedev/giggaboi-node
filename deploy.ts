@@ -13,6 +13,7 @@ const {
 import AllCommands from './commands/AllCommands';
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+import './augmentedTypes/discordJS';
 
 const GUILD_ID: string | undefined = NODE_ENV === ENV_TYPES.BETA ? BETA_GUILD_ID : undefined;
 const DISCORD_TOKEN: string | undefined = NODE_ENV === ENV_TYPES.BETA ? BETA_DISCORD_TOKEN : PRODUCTION_DISCORD_TOKEN;
