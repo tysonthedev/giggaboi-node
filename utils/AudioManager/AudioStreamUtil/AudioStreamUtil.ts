@@ -65,7 +65,7 @@ async function getAudioStream(
 			retryMessage = await interactionOrMessageReply(
 				retryMessage ?? useInteractionOrMessage ? interactionOrMessage : null,
 				useInteractionOrMessage ? null : interactionOrMessage.channelId,
-				`Failed to play song: ${linkOrSearchTerm}`
+				`Failed to play song: <${linkOrSearchTerm}>`
 			);
 			return false;
 		}
@@ -74,20 +74,20 @@ async function getAudioStream(
 		retryMessage = await interactionOrMessageReply(
 			retryMessage ?? useInteractionOrMessage ? interactionOrMessage : null,
 			useInteractionOrMessage ? null : interactionOrMessage.channelId,
-			`Retry ${i}/${TRY_COUNT - 1} to play ${linkOrSearchTerm}`
+			`Retry ${i}/${TRY_COUNT - 1} to play <${linkOrSearchTerm}>`
 		);
 	}
 	if (Boolean(stream))
 		interactionOrMessageReply(
 			retryMessage ?? useInteractionOrMessage ? interactionOrMessage : null,
 			useInteractionOrMessage ? null : interactionOrMessage.channelId,
-			`Playing ${linkOrSearchTerm}`
+			`Playing <${linkOrSearchTerm}>`
 		);
 	else
 		interactionOrMessageReply(
 			retryMessage ?? useInteractionOrMessage ? interactionOrMessage : null,
 			useInteractionOrMessage ? null : interactionOrMessage.channelId,
-			`Failed to play ${linkOrSearchTerm}`
+			`Failed to play <${linkOrSearchTerm}>`
 		);
 	//if it failed all 5 times or there is a stream then return it
 	return stream as Readable | boolean;

@@ -11,7 +11,7 @@ class Queue implements Command {
 		if (!interactionOrCommand.isCommand()) return;
 		const queueResponse = AudioManager.queue(interactionOrCommand.guildId);
 		if (!queueResponse.success) interactionOrCommand.reply(queueResponse.error ?? 'An Error Occurred');
-		else interactionOrCommand.reply('Queue\n' + queueResponse.queue?.join('\n'));
+		else interactionOrCommand.reply(`Queue\n<${queueResponse.queue?.join('>\n<')}>`);
 	};
 }
 const queue = new Queue();
