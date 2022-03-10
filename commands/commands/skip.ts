@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 class Skip implements Command {
 	data = new SlashCommandBuilder().setName('skip').setDescription('Skips the current playing audio').toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {

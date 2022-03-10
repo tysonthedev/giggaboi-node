@@ -14,6 +14,7 @@ class Play implements Command {
 				.setRequired(true)
 		)
 		.toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {

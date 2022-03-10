@@ -9,6 +9,7 @@ class Connect implements Command {
 		.setName('connect')
 		.setDescription('connects the bot to your current voice channel')
 		.toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {

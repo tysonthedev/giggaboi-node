@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 class Unpause implements Command {
 	data = new SlashCommandBuilder().setName('unpause').setDescription('unpause current playing audio').toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {

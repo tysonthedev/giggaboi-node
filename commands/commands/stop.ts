@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 class Stop implements Command {
 	data = new SlashCommandBuilder().setName('stop').setDescription('stops all playing audio').toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {

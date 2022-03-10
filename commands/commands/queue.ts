@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 class Queue implements Command {
 	data = new SlashCommandBuilder().setName('queue').setDescription('See the current queue').toJSON();
+	requireVoiceChannel = true;
 	execute: (interactionOrCommand: Interaction | Message) => void = async (
 		interactionOrCommand: Interaction | Message
 	) => {
